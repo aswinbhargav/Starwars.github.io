@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APIREQUEST</title>
+    <style>
+        *{
+    margin: 0;
+    padding: 0;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    box-sizing: border-box;
+    background-color: cadetblue;
+}
+#imageContainer {
+    width: 100%;
+    height: 100vh;
+    /* background-color: rgb(139, 113, 94); */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#imageContainer img {
+    max-width: 100%; /* Ensure the image doesn't exceed the container width */
+    max-height: 80vh; /* Ensure the image doesn't exceed the container height */
+    border-radius: 10px; /* Apply rounded corners to the image */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Add a shadow effect to the image */
+     margin: 150px; 
+}
+
+#name,
+#height,
+#mass {
+    text-align: center;
+}
+
+.RandomChar{
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    justify-content: center;
+}
+
+    </style>
+</head>
+<body>
+    <!-- <b>Name : </b> -->
+    <div id="name">...</div>
+
+    <!-- <b>Height : </b> -->
+    <div id="height">...</div>
+
+    <!-- <b>Mass : </b> -->
+    <div id="mass">...</div>
+
+    <button class="RandomChar">Random</button>
+
+    <div id="imageContainer"></div>
+
+
+    <script>
+        const name = document.getElementById("name");
+        const height = document.getElementById("height");
+        const mass = document.getElementById("mass");
+        const button = document.querySelector(".RandomChar");
+        const imageContainer = document.getElementById('imageContainer');
+
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            const ranNum1 = Math.ceil(Math.random() * 83);
+
+            
+            fetch(`https://swapi.dev/api/people/${ranNum1}/`)
+                .then(response => response.json())
+                .then(character => {
+                    name.textContent = "Name: " + character.name;
+                    height.textContent = "Height: " + character.height;
+                    mass.textContent = "Mass: " + character.mass;
+
+                    
+                    imageContainer.innerHTML = '';
+
+                    
+                    fetch(`https://akabab.github.io/starwars-api/api/id/${ranNum1}.json`)
+                        .then(response => response.json())
+                        .then(data => {
+                            const img = document.createElement('img');
+                            img.src = data.image;
+                            img.alt = 'Star Wars Character Image';
+                            img.style.maxWidth = '450px'; // 
+                            imageContainer.appendChild(img);
+                        })
+                        .catch(error => {
+                            console.error('Error fetching character image:', error);
+                        });
+                })
+                .catch(error => {
+                    console.error('Error fetching character:', error);
+                });
+        });
+    </script>
+</body>
+</html>
